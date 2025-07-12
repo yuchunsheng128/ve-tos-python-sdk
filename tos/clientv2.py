@@ -1600,7 +1600,8 @@ class TosClientV2(TosClient):
                    forbid_overwrite: bool = None,
                    if_match: str = None,
                    generic_input: GenericInput = None,
-                   tagging: str = None) -> PutObjectOutput:
+                   tagging: str = None,
+                   custom_header: Dict[str, str] = None) -> PutObjectOutput:
         """上传对象
 
         :param bucket: 桶名
@@ -1658,6 +1659,9 @@ class TosClientV2(TosClient):
         if self.except100_continue_threshold > 0 and (
                 content_length is None or content_length > self.except100_continue_threshold):
             headers['Expect'] = "100-continue"
+        
+        for k, v in custom_header.items():
+            headers[k] = v
 
         if content:
             content = init_content(content)
